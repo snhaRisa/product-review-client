@@ -1,7 +1,7 @@
 
 import { useState } from 'react'; 
 import validator from 'validator';
-import { useHistory, Link } from 'react-router-dom/cjs/react-router-dom.min'; 
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'; 
 import { useDispatch } from 'react-redux';
 
 import { startRegisterUser } from '../Actions/userActions';
@@ -81,7 +81,6 @@ const Register = (props)=>
         if(Object.keys(temp).length > 0)
         {
             setErrors(temp); 
-            console.log(temp);
         }
         else
         {

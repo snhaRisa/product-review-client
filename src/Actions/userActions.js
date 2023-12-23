@@ -1,5 +1,6 @@
 
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const backendURL = 'http://localhost:4050';
 
@@ -12,11 +13,13 @@ export const startRegisterUser = (inputObj, resetForm, history)=>
         {
             const temp = await axios.post(`${backendURL}/register`, inputObj);
             const result = temp.data; 
-            console.log(result); 
+            Swal.fire(result); 
+            resetForm(); 
+            history.push('/login');
         }
         catch(err)
         {
-            console.error(err);
+            Swal.fire('Error while registering your account !');
         }
     }
 };
@@ -29,12 +32,39 @@ export const startLoginUser = (inputObj, resetForm, history)=>
         try
         {
             const temp = await axios.post(`${backendURL}/login`, inputObj);
-            const result = temp.data; 
-            console.log(result);
+            const result = temp.data;
+
+            if(result.includes('Bearer'))
+            {
+                const token = result;
+                localStorage.setItem('token', token);
+
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                      toast.onmouseenter = Swal.stopTimer;
+                      toast.onmouseleave = Swal.resumeTimer;
+                    }
+                  });
+                Toast.fire({
+                icon: "success",
+                title: "Signed in Successfully !"
+                });
+                resetForm(); 
+                history.push('/');
+            } 
+            else
+            {
+                Swal.fire('Invalid E-Mail or Password !');
+            }
         }
         catch(err)
         {
-            console.error(err);
+            Swal.fire('Invalid E-Mail or Password !');
         }
     }
 }
