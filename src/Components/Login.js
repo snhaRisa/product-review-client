@@ -8,6 +8,8 @@ import { startLoginUser } from '../Actions/userActions';
 
 const Login = (props)=>
 {
+    const {handleIsLog} = props; 
+
     const [email, setEmail] = useState(''); 
     const [password, setPassword] = useState(''); 
     const [errors, setErrors] = useState({});
@@ -34,6 +36,7 @@ const Login = (props)=>
         setEmail('');
         setPassword('');
         setErrors({});
+        handleIsLog(); 
     };
 
     function runValidations()
@@ -53,7 +56,7 @@ const Login = (props)=>
         {
             temp.password = 'Password cannot be empty !'; 
         };
-        console.log(temp);
+
         return temp; 
     };
 

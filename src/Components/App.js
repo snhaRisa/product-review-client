@@ -6,19 +6,20 @@ import Navigation from './Navigation';
 const App = (props)=>
 {
     const [isLog, setIsLog] = useState(false);
-
+    const token = localStorage.getItem('token');
+    
     useEffect(()=>
     {
-        const token = localStorage.getItem('token'); 
         if(token)
         {
             setIsLog(true);
         }
         else
         {
-            setIsLog(false); 
-        }
-    }, []);
+            setIsLog(false);
+        };
+        
+    }, [token]);
 
     function handleIsLog()
     {

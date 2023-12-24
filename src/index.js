@@ -12,7 +12,7 @@ console.log(store.getState());
 store.subscribe(()=>
 {
     console.log('Updates', store.getState());
-})
+});
 
 const root = ReactDOM.createRoot(document.getElementById('root')); 
 
