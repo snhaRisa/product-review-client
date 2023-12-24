@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import axios from 'axios';
 
 import { addUser } from "../Actions/userActions";
+import Admin from "./Admin";
 
 const Profile = (props)=>
 {
@@ -98,6 +99,7 @@ const Profile = (props)=>
                 user.role === 'admin' ?
                     <>
                         <h3>Admin Page.</h3>
+                        <Admin/>
                     </>
                     :
                     <>
