@@ -3,6 +3,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 import ProductForm from './ProductForm';
+import InfoTable from './InfoTable'; 
 
 const Admin = (props)=>
 {
@@ -26,6 +27,7 @@ const Admin = (props)=>
                 </p>
                 <hr/>
                 <ProductForm/>
+                <InfoTable/>
             </div>
             :
             null
