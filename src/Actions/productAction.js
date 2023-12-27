@@ -32,7 +32,7 @@ export const startAddProduct = (inputObj, resetForm)=>
         }
         catch(err)
         {
-            Swal.fire('Error while uplaodin the product. Please try again later.');
+            Swal.fire('Error while uploading the product. Please try again later.');
         }
     });
 };

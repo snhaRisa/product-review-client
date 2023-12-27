@@ -11,6 +11,8 @@ const Home = (props)=>
     const baseUrl = `http://localhost:4050`; 
 
     const [products, setProducts] = useState([]); 
+    const [search, setSearch] = useState('');
+    const [searchResult, setSearchResult] = useState([]);
 
     useEffect(()=>
     {
@@ -19,7 +21,6 @@ const Home = (props)=>
             try
             {
                 const temp = await axios.get(`${baseUrl}/get-all-products`, {headers:{authorization: token}}); 
-                console.log(temp.data);
                 setProducts(temp.data); 
             }
             catch(err)
@@ -31,16 +32,65 @@ const Home = (props)=>
                 })
             };
         })()
-    }, []);
+    }, [token]);
 
     function handleViewContent(productId)
     {
         history.push(`/product/${productId}`);
-    }
+    };
+
+    function handleChange(event)
+    {
+        const {value} = event.target; 
+        
+        setSearch(value); 
+
+        if(value.length > 2)
+        {
+            const temp = products.filter((ele)=>
+            {
+                return ele.category.toLowerCase().includes(value.toLowerCase()) || ele.title.toLowerCase().includes(value.toLowerCase());
+            });
+
+            setSearchResult(temp);
+        }
+        else
+        {
+            setSearchResult([]);
+        }
+    };
 
     return(
         <div>
             <h1>Home Page</h1>
+            <input type="text" value={search} onChange={handleChange} placeholder="Search title or category...."/>
+            {
+                searchResult.length > 0 &&
+                <table border={2}>
+                    <thead>
+                        <tr>
+                            <th>Id.</th>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            searchResult.map((ele)=>
+                            {
+                                return <tr key={ele._id}>
+                                    <td>{ele._id}</td>
+                                    <td>{ele.title}</td>
+                                    <td>{ele.category}</td>
+                                    <td><button onClick={()=>{handleViewContent(ele._id)}}>View Product.</button></td>
+                                </tr>
+                            })
+                        }
+                    </tbody>
+                </table>
+            }
+            
             <ul>
                 {
                     products.map((ele)=>

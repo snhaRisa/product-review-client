@@ -1,7 +1,6 @@
 
 import { useState } from 'react'; 
-import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux'; 
+import { useDispatch} from 'react-redux'; 
 
 import { startAddProduct } from '../Actions/productAction';
 
