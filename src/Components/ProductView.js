@@ -29,7 +29,6 @@ const ProductView = (props)=>
     //Rendering states.
     const [showReviews, setShowReviews] = useState(true); 
     const [isLiked, setIsLiked] = useState(null); 
-    const [isReviewLiked, setIsReviewLiked] = useState(null);
     const [average, setAverage] = useState(''); 
     
     
@@ -62,7 +61,7 @@ const ProductView = (props)=>
                 {
                     return prev+=curr.rating; 
                 }, 0);
-                const avg = rating/tempDoc.data.reviews.length; 
+                const avg = Math.round((rating/tempDoc.data.reviews.length)); 
                 
                 if(avg)
                 {
@@ -82,7 +81,7 @@ const ProductView = (props)=>
                 });
             };
         })()
-    }, []);
+    }, [token]);
 
     function runValidations()
     {
@@ -137,6 +136,7 @@ const ProductView = (props)=>
 
             const temp = await axios.post(`${baseUrl}/add-review`, {tempObj}, {headers: {authentication:token}}); 
             setProduct(temp.data);
+            
             resetForm();
             Swal.fire({
                 title: 'Successfully added the review.', 
@@ -198,27 +198,22 @@ const ProductView = (props)=>
         }
     };
 
-
-    // async function handleProductDislike(productId)
-    // {
-    //     if(isLiked === 'disliked')
-    //     {
-    //         return Swal.fire('You have already disliked the product', 'success'); 
-    //     }
-    //     try
-    //     {
-    //         const temp = await axios.put(`${baseUrl}/add-product-dislike`, {userId: user._id, productId: productId}, {headers:{authentication:token}}); 
-    //         setProduct(temp.data);
-    //     }
-    //     catch(err)
-    //     {
-    //         Swal.fire({
-    //             title: 'Error while disliking the Product.', 
-    //             text: 'Try again later', 
-    //             timer: 1000
-    //         });
-    //     };
-    // };
+    async function handleReviewDelete(productId, reviewId, userId)
+    {
+        try
+        {
+            const temp = await axios.delete(`${baseUrl}/delete-review-user`, {data:{productId, reviewId, userId}, headers:{authentication: token}});
+            setProduct(temp.data);
+        }
+        catch(err)
+        {
+            Swal.fire({
+                title: 'Error deleting your review', 
+                text: 'Try again later.', 
+                timer: 2000
+            });
+        };
+    };
 
     return(
         <div>
@@ -243,13 +238,6 @@ const ProductView = (props)=>
                     </button>
                 </h6>
                 <h6>Average rating of the Product : {average}</h6>
-                {/* <h6>Dislikes : {product && product.dislikes && product.dislikes.length}
-                    <button 
-                        disabled={isLiked==='disliked'}
-                        onClick={()=>{handleProductDislike(product._id)}}>
-                        Dislike
-                    </button>
-                </h6> */}
                 <br/>
     
                 <button 
@@ -289,17 +277,32 @@ const ProductView = (props)=>
                                     return <li key={ele._id}>
                                         <h5>
                                             {ele.text} posted by {ele.userId.username} on {ele.timestamp.slice(0,10)} with {ele.rating} stars.
-                                            <button 
-                                                disabled={ele.likes.find((e)=>e.userId===user._id)} 
-                                                onClick={()=>{handleReviewLike(product._id, ele._id, user._id)}}>
-                                                    Like
-                                            </button> {ele.likes.length}
-                                            <br/>
-                                            <button 
-                                                disabled={ele.dislikes.find((e)=>e.userId===user._id)} 
-                                                onClick={()=>{handleReviewDislike(product._id, ele._id, user._id)}}>
-                                                    Dislike
-                                            </button> {ele.dislikes.length}
+                                            
+                                            {
+                                                ele.likes.find((e)=>e.userId === user._id) ?
+                                                (<>
+                                                    <button 
+                                                        disabled={ele.dislikes.find((e)=>e.userId===user._id)} 
+                                                        onClick={()=>{handleReviewDislike(product._id, ele._id, user._id)}}>
+                                                            Dislike
+                                                    </button>
+                                                    {ele.likes.length}
+                                                </>)
+                                                :
+                                                (<>
+                                                    <button 
+                                                        disabled={ele.likes.find((e)=>e.userId===user._id)} 
+                                                        onClick={()=>{handleReviewLike(product._id, ele._id, user._id)}}>
+                                                            Like
+                                                    </button>
+                                                    {ele.likes.length}
+                                                </>)
+                                            }
+                                            {
+                                                ele.userId._id === user._id &&
+                                                <button onClick={()=>{handleReviewDelete(product._id, ele._id, ele.userId._id)}}>Delete Your Review</button>
+                                            }
+
                                             <br/>
                                         </h5>
                                     </li>

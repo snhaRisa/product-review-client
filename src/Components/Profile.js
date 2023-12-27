@@ -14,6 +14,7 @@ const Profile = (props)=>
     const token = localStorage.getItem('token');
 
     const [userImage, setUserImage] = useState(null); 
+    const [reviews, setReviews] = useState([]);
 
     const user = useSelector((state)=>
     {
@@ -39,6 +40,9 @@ const Profile = (props)=>
                         timer: 1000
                     });
                 };
+
+                const tempReviews = await axios.get(`${baseUrl}/get-all-reviews`, {headers:{authentication:token}});
+                setReviews(tempReviews.data);
             }
             catch(err)
             {
@@ -119,6 +123,20 @@ const Profile = (props)=>
                         <h2>Account Created : {user && user.createdAt && user.createdAt.slice(0,10)}</h2>
                         <br/><br/>
                         <h5>All his reviews history !</h5>
+                        
+                        <ul>
+                            {
+                                reviews && reviews.map((review)=>
+                                {
+                                    return <li key={review._id}>
+                                            <p>
+                                            {review.text} posted on {review.timestamp.slice(0,10)} on product titled {review.productId.title}<br/>
+                                            Received {review.likes.length} likes & {review.dislikes.length} dislikes.
+                                            </p>
+                                        </li>
+                                })
+                            }
+                        </ul>
                     </>
             }
         </div>
