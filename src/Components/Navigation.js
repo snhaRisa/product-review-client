@@ -9,6 +9,7 @@ import Register from './Register';
 import Login from './Login';
 import Home from './Home';
 import Profile from './Profile';
+import ProductView from './ProductView';
 import { removeUser } from '../Actions/userActions';
 
 
@@ -48,6 +49,7 @@ const Navigation = (props)=>
                 isLog ?
                     <>
                         <ul>
+                            <li><Link to='/'>Home</Link></li>
                             <li><Link to='/profile'>Profile</Link></li>
                             <li><Link to='/' onClick={handleLogout}>Logout</Link></li>
                         </ul>
@@ -65,6 +67,7 @@ const Navigation = (props)=>
             <Route path='/login' render={(props)=>{return <Login {...props} handleIsLog={handleIsLog}/>}} exact={true}/>
             <Route path='/register' component={Register} exact={true}/>
             <PrivateRoute path='/profile' component={Profile} exact={true}/>
+            <PrivateRoute path='/product/:productId' component={ProductView} exact={true}/>
         </div>
     );
 };

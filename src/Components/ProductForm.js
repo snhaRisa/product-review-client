@@ -34,13 +34,14 @@ const ProductForm = (props)=>
         else if(name==='productImage')
         {
             const img = event.target.files[0]; 
+            console.log(img);
             setProductImg(img); 
         };
     };
 
     function resetForm()
     {
-        setProductImg(false); 
+        setProductImg(''); 
         setTitle(''); 
         setDescription(''); 
         setCategory(''); 

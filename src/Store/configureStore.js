@@ -9,7 +9,6 @@ const configureStore = ()=>
 {
     const store = createStore(combineReducers({
         user: userReducer, 
-        products: productReducer
     }), applyMiddleware(thunk))
 
     return store;

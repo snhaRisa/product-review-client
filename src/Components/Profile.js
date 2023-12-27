@@ -91,7 +91,7 @@ const Profile = (props)=>
                 timer: 1000
             });
         };
-    }
+    };
 
     return(
         <div>
