@@ -12,7 +12,7 @@ const Home = (props)=>
 {
     const history = useHistory(); 
     const token = localStorage.getItem('token'); 
-    const baseUrl = `http://localhost:4050`; 
+    const baseUrl = `https://product-review-3uk9.onrender.com` || 'http://localhost:4050'; 
 
     const [products, setProducts] = useState([]); 
     const [search, setSearch] = useState('');

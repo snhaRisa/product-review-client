@@ -2,7 +2,7 @@
 import axios from "axios";
 import Swal from "sweetalert2";
 
-const baseURL = `http://localhost:4050`;
+const baseURL = `https://product-review-3uk9.onrender.com` || `http://localhost:4050`;
 const token = localStorage.getItem('token'); 
 
 //API function to add a product in the database. 

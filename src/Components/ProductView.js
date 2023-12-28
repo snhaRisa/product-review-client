@@ -24,7 +24,7 @@ const ProductView = (props)=>
 
     const dispatch = useDispatch(); 
     const {productId} = useParams();
-    const baseUrl = 'http://localhost:4050'; 
+    const baseUrl = `https://product-review-3uk9.onrender.com`||'http://localhost:4050'; 
     const token = localStorage.getItem('token'); 
     
     const [product, setProduct] = useState({}); 
