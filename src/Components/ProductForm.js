@@ -1,11 +1,13 @@
 
 import { useState } from 'react'; 
 import { useDispatch} from 'react-redux'; 
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { startAddProduct } from '../Actions/productAction';
 
 const ProductForm = (props)=>
 {
+    const { handleState } = props; 
     const dispatch = useDispatch(); 
 
     const [productImg, setProductImg] = useState(null); 
@@ -87,56 +89,71 @@ const ProductForm = (props)=>
                 description, 
                 category
             };
-            dispatch(startAddProduct(productObj, resetForm));
+            dispatch(startAddProduct(productObj, resetForm, handleState));
         }        
     }
 
     return(
-        <>
-        <h3>Add a product here Admin !</h3>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Product Image : 
+        <div className='container mt-2 text-start'>
+            <h3 className='mt-2 display-4'>Add a Product here Admin!</h3>
+                <form onSubmit={handleSubmit}>
+                    <div className='form-group mt-4'>
+                        <label>
+                            Product Image : 
+                            <br/>
+                            <input
+                                className='form-control' 
+                                type='file' 
+                                name='productImage'
+                                onChange={handleChange}
+                                accept='image/*' 
+                                required/>
+                        </label><br/>
+                    </div>
+                    <div className='form-group mt-4 col-md-6'>
                     <input 
-                        type='file' 
-                        name='productImage'
+                        className='form-control'
+                        type='text' 
+                        name='title' 
+                        value={title} 
+                        onChange={handleChange} 
+                        required
+                        placeholder='Enter Product Title...'
+                    />
+                    {errors.title && <div className='mt-3 alert alert-danger'><span>{errors.title}</span></div>}
+                    </div>
+                    <br/>
+                    <div className='form-group col-md-6'>
+                    <textarea 
+                        className='form-control'
+                        name='description' 
+                        value={description} 
+                        required
+                        onChange={handleChange} 
+                        placeholder='Enter product description....'>
+                    </textarea>
+                    {errors.description && <div className='mt-3 alert alert-danger'><span>{errors.description}</span></div>}
+                    </div>
+                    <br/>
+                    <div className='form-group col-md-6'>
+                    <input 
+                        className='form-control'
+                        type='text' 
+                        name='category'
+                        value={category}
+                        required
                         onChange={handleChange}
-                        accept='image/*' 
-                        required/>
-                </label><br/>
-                <input 
-                    type='text' 
-                    name='title' 
-                    value={title} 
-                    onChange={handleChange} 
-                    required
-                    placeholder='Enter Product Title...'
-                />
-                {errors.title && <span>{errors.title}</span>}
-                <br/>
-                <textarea 
-                    name='description' 
-                    value={description} 
-                    required
-                    onChange={handleChange} 
-                    placeholder='Enter product description....'>
-                </textarea>
-                {errors.description && <span>{errors.description}</span>}
-                <br/>
-                <input 
-                    type='text' 
-                    name='category'
-                    value={category}
-                    required
-                    onChange={handleChange}
-                    placeholder='Enter your product category...'
-                />
-                {errors.category && <span>{errors.category}</span>}
-                <br/>
-
-                <input type='submit' value={'Add the Product'}/>
-            </form>
-        </>
+                        placeholder='Enter your product category...'
+                    />
+                    {errors.category && <div className='mt-3 alert alert-danger'><span>{errors.category}</span></div>}
+                    </div>
+                    <br/>
+                    <div>
+                        <input className='btn btn-outline-dark mt-2 md-5' type='submit' value={'Add the Product'}/>
+                    </div>
+                </form>
+            <hr/>
+        </div>
     );    
 };
 

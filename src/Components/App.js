@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from 'react'; 
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Navigation from './Navigation';
 
@@ -27,8 +28,8 @@ const App = (props)=>
     };
 
     return (
-        <div>
-            <h1>Product Review System !</h1>
+        <div className='container mt-3 text-center'>
+            <h1 className='display-1 font-weight-bold' style={{fontSize: '6rem'}}><u>Product Review System</u></h1>
             <Navigation isLog={isLog} handleIsLog={handleIsLog}/>
         </div>
     );

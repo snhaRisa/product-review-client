@@ -6,7 +6,7 @@ const baseURL = `http://localhost:4050`;
 const token = localStorage.getItem('token'); 
 
 //API function to add a product in the database. 
-export const startAddProduct = (inputObj, resetForm)=>
+export const startAddProduct = (inputObj, resetForm, handleState)=>
 {
     return (async (dispatch)=>
     {
@@ -20,6 +20,7 @@ export const startAddProduct = (inputObj, resetForm)=>
                     timer: 1000
                 });
                 resetForm(); 
+                handleState();
             }
             else
             {
