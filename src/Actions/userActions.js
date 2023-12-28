@@ -2,7 +2,7 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-const backendURL = 'http://localhost:4050';
+const backendURL = `https://product-review-3uk9.onrender.com` || 'http://localhost:4050';
 
 //Action to register new user.
 export const startRegisterUser = (inputObj, resetForm, history)=>

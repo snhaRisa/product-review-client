@@ -12,7 +12,7 @@ import Admin from "./Admin";
 const Profile = (props)=>
 {
     const dispatch = useDispatch(); 
-    const baseUrl = `http://localhost:4050`
+    const baseUrl = `https://product-review-3uk9.onrender.com` || `http://localhost:4050`
     const token = localStorage.getItem('token');
 
     const [userImage, setUserImage] = useState(null); 

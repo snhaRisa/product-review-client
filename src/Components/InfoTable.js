@@ -9,7 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const InfoTable = (props)=>
 {
     const { trigger } = props; 
-    const baseURL = `http://localhost:4050`;
+    const baseURL = `https://product-review-3uk9.onrender.com` || `http://localhost:4050`;
     const token = localStorage.getItem('token');
     const history = useHistory(); 
 
