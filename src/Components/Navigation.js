@@ -3,6 +3,7 @@ import React from 'react';
 import { Route, Link } from 'react-router-dom'; 
 import { useDispatch } from 'react-redux'; 
 import Swal from 'sweetalert2';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import PrivateRoute from './PrivateRoute';
 import Register from './Register';
@@ -43,27 +44,36 @@ const Navigation = (props)=>
     };
 
     return(
-        <div>
-            <h2>Navigation-Bar</h2>
-            {
-                isLog ?
-                    <>
-                        <ul>
-                            <li><Link to='/'>Home</Link></li>
-                            <li><Link to='/profile'>Profile</Link></li>
-                            <li><Link to='/' onClick={handleLogout}>Logout</Link></li>
-                        </ul>
-                    </>
-                :
-                    <>
-                        <ul>
-                            <li><Link to='/'>Home</Link></li>   
-                            <li><Link to='/register'>Register</Link></li>
-                            <li><Link to='/login'>Login</Link></li>
-                        </ul>
-                    </>
-            }
-
+        <div className='container mt-5 md-5'>
+            <nav className="navbar navbar-expand-lg bg-light mb-3">
+                <div className="collapse navbar-collapse" id="navbarNav">
+                    <ul className="navbar-nav ml-auto">
+                        <li className="nav-item">
+                            <Link to='/' className="nav-link" style={{color:'brown', fontSize:'20px'}}>Home</Link>
+                        </li>
+                        {isLog ? 
+                            <>
+                                <li className="nav-item">
+                                    <Link to='/profile' className="nav-link" style={{color:'brown', fontSize:'20px'}}>Profile</Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link to='/' onClick={handleLogout} className="nav-link" style={{color:'brown', fontSize:'20px'}}>Logout</Link>
+                                </li>
+                            </> 
+                        : 
+                            <>
+                                <li className="nav-item">
+                                    <Link to='/register' className="nav-link" style={{color:'brown', fontSize:'20px'}}>Register</Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link to='/login' className="nav-link"  style={{color:'brown', fontSize:'20px'}}>Login</Link>
+                                </li>
+                            </>
+                        }
+                    </ul>
+                </div>
+            </nav>
+    
             <Route path='/' component={Home} exact={true}/>
             <Route path='/login' render={(props)=>{return <Login {...props} handleIsLog={handleIsLog}/>}} exact={true}/>
             <Route path='/register' component={Register} exact={true}/>

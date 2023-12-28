@@ -8,11 +8,6 @@ import App from './Components/App';
 import configureStore from './Store/configureStore';
 
 const store = configureStore(); 
-console.log(store.getState());
-store.subscribe(()=>
-{
-    console.log('Updates', store.getState());
-});
 
 const root = ReactDOM.createRoot(document.getElementById('root')); 
 

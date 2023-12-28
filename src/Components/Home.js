@@ -3,6 +3,10 @@ import { useState, useEffect } from "react";
 import { useHistory } from 'react-router-dom';
 import axios from 'axios'; 
 import Swal from 'sweetalert2';
+import { AiOutlineLike, AiOutlineDislike } from "react-icons/ai";
+import { MdReviews } from "react-icons/md";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 const Home = (props)=>
 {
@@ -61,12 +65,15 @@ const Home = (props)=>
     };
 
     return(
-        <div>
-            <h1>Home Page</h1>
-            <input type="text" value={search} onChange={handleChange} placeholder="Search title or category...."/>
+        <div className="container mt-5">
+            <h1 className="display-1">Home Page</h1>
+            <div className="form-group col-md-8 mx-auto mt-5">
+                <input className="form-control" type="text" value={search} onChange={handleChange} placeholder="Search title or category...."/>
+            </div>
             {
                 searchResult.length > 0 &&
-                <table border={2}>
+                <div className="mt-5 col-md-10 mx-auto">
+                <table className="table table-bordered table-dark table-dark" border={2}>
                     <thead>
                         <tr>
                             <th>Id.</th>
@@ -83,30 +90,41 @@ const Home = (props)=>
                                     <td>{ele._id}</td>
                                     <td>{ele.title}</td>
                                     <td>{ele.category}</td>
-                                    <td><button onClick={()=>{handleViewContent(ele._id)}}>View Product.</button></td>
+                                    <td><button className="btn btn-sm btn-outline-warning" onClick={()=>{handleViewContent(ele._id)}}>View Product.</button></td>
                                 </tr>
                             })
                         }
                     </tbody>
                 </table>
+                </div>
             }
-            
-            <ul>
-                {
-                    products.map((ele)=>
-                    {
-                        return <li key={ele._id}>
-                                <h5>{ele.title}</h5>
-                                <p>
-                                    {ele.description}
-                                </p>
-                                <img src={ele.image} alt={ele.title} height={100} width={100}/>
-                                
-                                <button onClick={()=>{handleViewContent(ele._id)}}>View Product.</button>
-                            </li>
-                    })
-                }
-            </ul>
+            {
+                <div className="container mt-5">
+                    <div className="row">
+                        {
+                            products.length > 0 &&
+                            products.map((ele) => (
+                                <div className="col-md-3 mb-4" key={ele._id}>
+                                    <div className="card">
+                                        <img className="card-img-top" src={ele.image} alt={ele.title} style={{ height: '200px', objectFit: 'cover' }} />
+                                        <div className="card-body">
+                                            <h5 className="card-title">{ele.title}</h5>
+                                            <p className="card-text">
+                                                {ele.description.length>10 ? `${ele.description.slice(0,10)}...` : ele.description }
+                                            </p>
+                                            <small className="text-muted" style={{ marginRight: '15px' }}><AiOutlineLike/>{ele.likes.length}</small>
+                                            <small className="text-muted" style={{ marginRight: '15px' }}><AiOutlineDislike/>{ele.dislikes.length}</small>
+                                            <small className="text-muted"><MdReviews />{ele.reviews.length}</small>
+                                        </div>
+                                        <div className="card-footer">
+                                            <button className="mt-2 btn btn-outline-secondary" onClick={() => { handleViewContent(ele._id) }}>View Product</button>
+                                        </div>
+                                    </div>
+                                </div>
+                        ))}
+                    </div>
+                </div>
+            }
         </div>
     );
 };

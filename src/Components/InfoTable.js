@@ -3,10 +3,12 @@ import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Swal from 'sweetalert2'; 
 import axios from 'axios'; 
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 const InfoTable = (props)=>
 {
+    const { trigger } = props; 
     const baseURL = `http://localhost:4050`;
     const token = localStorage.getItem('token');
     const history = useHistory(); 
@@ -21,7 +23,7 @@ const InfoTable = (props)=>
     const [userSearch, setUserSearch] = useState([]);
     const [reviewSearch, setReviewSearch] = useState([]);
  
-    const [showProducts, setShowProducts] = useState(false); 
+    const [showProducts, setShowProducts] = useState(true); 
     const [showUsers, setShowUsers] = useState(false); 
     const [showReviews, setShowReviews] = useState(false); 
 
@@ -60,7 +62,7 @@ const InfoTable = (props)=>
                 });
             };
         })()
-    },[token, baseURL]);
+    },[trigger, token, baseURL]);
 
     function handleShowProducts()
     {
@@ -282,32 +284,39 @@ const InfoTable = (props)=>
     };
 
     return(
-        <div>
-            <br/>
-            <br/>
-            <hr/>
-            <input 
-                type='text' 
-                name= 'search'
-                value={search} 
-                onChange={handleSearch} 
-                placeholder='Search for users, reviews or products....'/>
-            <select name='select' value={select} onChange={handleChange}>
-                <option value='products'>Products</option>
-                <option value='users'>Users</option>
-                <option value='reviews'>Reviews</option>
-            </select><br/><br/>
+        <div className='container mt-2'>
+            <h2 className='display-4 text-start'>Search Products, Users, or Reviews</h2>
+            <div className='row mt-5'>
+                <div className='form-group col-md-8'>
+                    <input 
+                        className='form-control'
+                        type='text' 
+                        name= 'search'
+                        value={search} 
+                        onChange={handleSearch} 
+                        placeholder='Search for users, reviews or products....'/>
+                </div>
+                <div className='form-group col-md-4'>
+                    <select className='form-select' name='select' value={select} onChange={handleChange}>
+                        <option value='products'>Products</option>
+                        <option value='users'>Users</option>
+                        <option value='reviews'>Reviews</option>
+                    </select>
+                </div>
+            </div>
             {
                 productSearch.length>0 && 
-                <table border={2}>
+                <table className='table table-hover table-dark table-bordered mt-5' border={2}>
+                    <caption><span className='badge rounded-pill bg-success'>Search Results for Products</span></caption>
                     <thead>
                         <tr>
-                            <th>Id.</th>
-                            <th>Title</th>
-                            <th>Description</th>
-                            <th>Likes</th>
-                            <th>Category</th>
-                            <th>Image</th>
+                            <th scope='col'>Id.</th>
+                            <th scope='col'>Title</th>
+                            <th scope='col'>Description</th>
+                            <th scope='col'>Likes</th>
+                            <th scope='col'>Category</th>
+                            <th scope='col'>Image</th>
+                            <th scope='col'>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -321,6 +330,7 @@ const InfoTable = (props)=>
                                     <td>{ele.likes.length}</td>
                                     <td>{ele.category}</td>
                                     <td><img src={ele.image} alt={ele.title} width={80} height={80}/></td>
+                                    <td><button className='btn btn-outline-warning btn-sm' onClick={()=>{handleShow(ele._id)}}>View</button></td>
                                 </tr>
                             })
                         }
@@ -329,14 +339,15 @@ const InfoTable = (props)=>
             }
             {
                 userSearch.length>0 &&
-                <table border={2}>
+                <table className='table table-bordered table-hover table-dark mt-5' border={2}>
+                    <caption><span className='badge rounded-pill bg-success'>Search Results for Users.</span></caption>
                     <thead>
                         <tr>
-                            <th>Id</th>
-                            <th>Username</th>
-                            <th>E_Mail</th>
-                            <th>Image</th>
-                            <th>Created At</th>
+                            <th scope='col'>Id</th>
+                            <th scope='col'>Username</th>
+                            <th scope='col'>E_Mail</th>
+                            <th scope='col'>Image</th>
+                            <th scope='col'>Created At</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -357,15 +368,17 @@ const InfoTable = (props)=>
             }
             {
                 reviewSearch.length>0 && 
-                <table border={2}>
+                <table className='table table-bordered table-hover table-dark mt-5' border={2}>
+                    <caption><span className='badge rounded-pill bg-success'>Search Results for Reviews.</span></caption>
                     <thead>
                         <tr>
-                            <th>Id.</th>
-                            <th>Product Name</th>
-                            <th>Review By</th>
-                            <th>Feedback</th>
-                            <th>Rating</th>
-                            <th>Posted On</th>
+                            <th scope='col'>Id.</th>
+                            <th scope='col'>Product Name</th>
+                            <th scope='col'>Review By</th>
+                            <th scope='col'>Feedback</th>
+                            <th scope='col'>Rating</th>
+                            <th scope='col'>Posted On</th>
+                            <th scope='col'>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -379,20 +392,26 @@ const InfoTable = (props)=>
                                     <td>{ele.text}</td>
                                     <td>{ele.rating}</td>
                                     <td>{ele.timestamp.slice(0,10)}</td>
+                                    <td><button className='btn btn-outline-warning btn-sm' onClick={()=>{handleShow(ele.productId._id)}}>View Product</button></td>
                                 </tr>
                             })
                         }
                     </tbody>
                 </table>
             }
-            <button value={showProducts} onClick={handleShowProducts}>Show Products.</button>
-            <button value={showUsers} onClick={handleShowUsers}>Show Users.</button>
-            <button value={showReviews} onClick={handleShowReviews}>Show Reviews.</button>
+            <div className='text-start md-5'>
+                <div className='btn-group btn-group-toggle mt-4'>
+                    <button className='btn btn-outline-dark' value={showProducts} onClick={handleShowProducts}>Show Products.</button>
+                    <button className='btn btn-outline-dark' value={showUsers} onClick={handleShowUsers}>Show Users.</button>
+                    <button className='btn btn-outline-dark' value={showReviews} onClick={handleShowReviews}>Show Reviews.</button>
+                </div>
+            </div>
             {
                 showProducts && 
                 <>
-                    <h3>Product table.</h3>
-                    <table border={2}>
+                    <div className='mt-2 md-5'>
+                    <h3 className='text-start mt-4 md-3'>Product table.</h3>
+                    <table className='table table-bordered table-hover table-dark' border={2}>
                         <thead>
                             <tr>
                                 <th>Id.</th>
@@ -419,22 +438,26 @@ const InfoTable = (props)=>
                                         <td>{ele.likes.length}</td>
                                         <td>{ele.dislikes.length}</td>
                                         <td>{ele.reviews.length}</td>
-                                        <td><button onClick={()=>{handleShow(ele._id)}}>Show Product</button><br/> 
-                                            <button onClick={()=>{handleUpdate(ele)}}>Update Product</button><br/>
-                                            <button onClick={()=>{handleDelete(ele._id)}}>Delete</button>
+                                        <td><div className='btn-group btn-group-toggle btn-sm'>
+                                                <button className='btn btn-outline-warning btn-sm' onClick={()=>{handleShow(ele._id)}}>Show</button><br/> 
+                                                <button className='btn btn-outline-warning btn-sm' onClick={()=>{handleUpdate(ele)}}>Update</button><br/>
+                                                <button className='btn btn-outline-warning btn-sm' onClick={()=>{handleDelete(ele._id)}}>Delete</button>
+                                            </div>    
                                         </td>
                                     </tr>
                                 })
                             }
                         </tbody>
                     </table>
+                    </div>
                 </>
             }
             {
                 showUsers &&
                 <>
-                    <h1>Users Table.</h1>
-                    <table border={2}>
+                    <div className='mt-2 md-5'>
+                    <h3 className='text-start mt-4 md-3'>User Table.</h3>
+                    <table className='table table-bordered table-hover table-dark' border={2}>
                         <thead>
                             <tr>
                                 <th>Id.</th>
@@ -455,23 +478,25 @@ const InfoTable = (props)=>
                                         <td>{ele.email}</td>
                                         <td><img src={ele.image} alt='User Profile' width={80} height={80}/></td>
                                         <td>{ele.createdAt.slice(0,10)}</td>
-                                        <td><button disabled={ele.role==='admin'} onClick={()=>{handleUserDelete(ele._id)}}>Delete the User.</button></td>
+                                        <td><button className='btn btn-outline-warning btn-sm' disabled={ele.role==='admin'} onClick={()=>{handleUserDelete(ele._id)}}>Delete User.</button></td>
                                     </tr>
                                 })
                             }
                         </tbody>
                     </table>
+                    </div>
                 </>
             }
             {
                 showReviews &&
                 <>
-                    <h1>Reviews Table.</h1>
-                    <table border={2}>
+                    <div className='mt-2 md-5'>
+                    <h3 className='text-start md-3 mt-4'>Review Table.</h3>
+                    <table className='table table-bordered table-hover table-dark' border={2}>
                         <thead>
                             <tr>
                                 <th>Id.</th>
-                                <th>User Name</th>
+                                <th>Feedback By</th>
                                 <th>Product Name</th>
                                 <th>Feedback</th>
                                 <th>Ratings</th>
@@ -495,6 +520,7 @@ const InfoTable = (props)=>
                                         <td>{review.likes.length}</td>
                                         <td>{review.dislikes.length}</td>
                                         <td><button 
+                                                className='btn btn-outline-warning btn-sm'
                                                 onClick={()=>{handleReviewDelete(review._id, review.productId._id, review.userId._id)}}>
                                                     Delete Review
                                             </button>
@@ -504,6 +530,7 @@ const InfoTable = (props)=>
                             }
                         </tbody>
                     </table>
+                    </div>
                 </>
             }
         </div>

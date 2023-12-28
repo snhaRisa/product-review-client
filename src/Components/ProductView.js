@@ -6,6 +6,12 @@ import { useDispatch } from 'react-redux';
 import ReactStars from 'react-stars';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { FcLike, FcDislike } from "react-icons/fc";
+import { LiaCommentSolid } from "react-icons/lia";
+import { FcRating } from "react-icons/fc";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { BsArrowLeftShort } from 'react-icons/bs';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { addUser } from '../Actions/userActions';
 
@@ -28,7 +34,6 @@ const ProductView = (props)=>
 
     //Rendering states.
     const [showReviews, setShowReviews] = useState(true); 
-    const [isLiked, setIsLiked] = useState(null); 
     const [average, setAverage] = useState(''); 
     
     
@@ -47,14 +52,7 @@ const ProductView = (props)=>
                 if(tempAccount.data.hasOwnProperty('username'))
                 {
                     dispatch(addUser(tempAccount.data))
-                }
-                
-                //Checking conditions. 
-                const checkLike = tempDoc.data.likes.find((ele)=>ele.userId === tempAccount.data._id); 
-                if(checkLike)
-                {
-                    setIsLiked(true);
-                }
+                };
 
                 //Calculation ratings.
                 const rating = tempDoc.data.reviews.reduce((prev, curr)=>
@@ -152,7 +150,23 @@ const ProductView = (props)=>
         {
             const temp = await axios.put(`${baseUrl}/add-product-like`, {userId: user._id, productId: productId}, {headers:{authentication:token}}); 
             setProduct(temp.data);
-            setIsLiked(true);
+        }
+        catch(err)
+        {
+            Swal.fire({
+                title: 'Error while liking the Product.', 
+                text: 'Try again later', 
+                timer: 1000
+            });
+        };
+    };
+
+    async function handleProductDislike(productId)
+    {
+        try
+        {
+            const temp = await axios.put(`${baseUrl}/add-product-dislike`, {userId: user._id, productId: productId}, {headers:{authentication:token}}); 
+            setProduct(temp.data);
         }
         catch(err)
         {
@@ -216,91 +230,118 @@ const ProductView = (props)=>
     };
 
     return(
-        <div>
-            <h2>This is your product.</h2>
-            <hr/>
-            <>
-                <h4>{product && product.title}</h4>
-                <p>
-                    {product && product.description}
-                </p>
-                <img 
+        <div className='container'>
+            <h2 className='mt-5 text-start display-2 font-bold'>Product Showcase</h2>
+            <div className='card mt-5'>
+                <img
+                    className='card-img-top' 
                     src={product.image} 
                     alt={product.title} 
                     width={400} 
-                    height={500}
+                    height={600} 
+                    style={{ width: 'auto', maxHeight: '100%', objectFit: 'cover' }}
                 />
-                <h6>Likes : {product && product.likes && product.likes.length}
-                    <button 
-                        disabled={isLiked}
-                        onClick={()=>{handleProductLike(product._id)}}>
-                            Like
-                    </button>
-                </h6>
-                <h6>Average rating of the Product : {average}</h6>
-                <br/>
-    
+                <h3 className='text-start card-title mt-2' style={{marginLeft:'15px'}}>{product && product.title}</h3>
+                <p className='text-start card-body'>
+                    {product && product.description}
+                </p>
+                <div className='card-footer text-start d-flex justify-content-between align-items-center mt-2'>
+                    <div><FcRating style={{fontSize:'50px'}}/>{average}</div>
+                    {
+                        (product?.likes?.find((ele)=>ele.userId === user._id)) ?
+                        (
+                            <button 
+                                className='btn btn-outline-dark'
+                                onClick={()=>{handleProductDislike(product._id)}}>
+                                    <FcDislike style={{fontSize: '30px'}}/> {product && product?.likes?.length}
+                            </button>
+                        )
+                        :
+                        (
+                            <button 
+                                className='btn btn-outline-dark'
+                                onClick={()=>{handleProductLike(product._id)}}>
+                                    <FcLike style={{fontSize:'30px'}} /> {product && product.likes && product.likes.length}
+                            </button>
+                        )
+                    }
+                </div>
+            </div>
+            <div>
+                <div className='mt-5 text-start'>
+                    <h3 className='text-muted'>Add Your Review.</h3>
+                    <form onSubmit={handleSubmit}>
+                        <ReactStars 
+                            count={5} 
+                            size={50} 
+                            color1='black' 
+                            color2='orange' 
+                            half={false} 
+                            value={rate}
+                            onChange={handleRateChange}/>
+                        <div className='form-group'>
+                        <textarea 
+                            className='form-control'
+                            style={{width:600, height:200}}  
+                            value={feedback} 
+                            onChange={handleChange} 
+                            placeholder='Write your feedback....'>    
+                        </textarea>
+                        </div>
+                        {errors.feedback && <div className='mt-2 alert alert-danger col-md-3'><span>{errors.feedback}</span></div>}
+                        <br/>
+                        <input className='btn btn-outline-success btn-sm' type='submit' value={'Add your review.'}/>
+                    </form>
+                    <hr/>
+                </div>
                 <button 
+                    className='mt-4 btn btn-outline-dark btn-lg'
                     value={showReviews} 
                     onClick={handleShowReviews}>
-                        Show Reviews
+                        <LiaCommentSolid style={{fontSize:'50px'}} />Show Reviews
                 </button>
                 {
                     showReviews && 
-                    <>
-                        <h3>Add Your Review.</h3>
-                        <form onSubmit={handleSubmit}>
-                            <ReactStars 
-                                count={5} 
-                                size={70} 
-                                color1='black' 
-                                color2='red' 
-                                half={false} 
-                                value={rate}
-                                onChange={handleRateChange}/>
-                            <textarea 
-                                style={{width:600, height:200}}  
-                                value={feedback} 
-                                onChange={handleChange} 
-                                placeholder='Write your feedback....'>    
-                            </textarea>
-                            {errors.feedback && <span>{errors.feedback}</span>}
-                            <br/>
-                            <input type='submit' value={'Add your review.'}/>
-                        </form>
-                        <hr/>
-                        <h4>All reviews.</h4>
-                        <ul>
+                    <div className='mt-4 text-start'>
+                        <h3 className='text-muted font-bold md-5'>All Reviews for the Product.</h3>
+                        <ul className='list-group mt-3'>
                             {
                                 product && product.reviews && product.reviews.map((ele)=>
                                 {
-                                    return <li key={ele._id}>
+                                    return <li className='list-group-item list-group-item-secondary' key={ele._id}>
                                         <h5>
-                                            {ele.text} posted by {ele.userId.username} on {ele.timestamp.slice(0,10)} with {ele.rating} stars.
-                                            
+                                            <b>{ele.text}</b> posted by <b>{ele.userId.username}</b> on <b>{ele.timestamp.slice(0,10)}</b> with <b>{ele.rating}</b> stars.
+                                            <br/>
                                             {
                                                 ele.likes.find((e)=>e.userId === user._id) ?
                                                 (<>
                                                     <button 
+                                                        className='btn btn-outline-dark mt-2 btn-sm'
                                                         disabled={ele.dislikes.find((e)=>e.userId===user._id)} 
                                                         onClick={()=>{handleReviewDislike(product._id, ele._id, user._id)}}>
-                                                            Dislike
+                                                            <FcDislike style={{fontSize:'25px', marginRight: '5px'}}/>{ele.likes.length}
                                                     </button>
-                                                    {ele.likes.length}
+                                                    
                                                 </>)
                                                 :
                                                 (<>
                                                     <button 
+                                                        className='btn btn-outline-secondary mt-2 btn-sm'
                                                         disabled={ele.likes.find((e)=>e.userId===user._id)} 
                                                         onClick={()=>{handleReviewLike(product._id, ele._id, user._id)}}>
-                                                            Like
+                                                            <FcLike style={{fontSize:'25px', marginRight:'5px'}} />{ele.likes.length}
                                                     </button>
-                                                    {ele.likes.length}
+                                                    
                                                 </>)
                                             }
                                             {
                                                 ele.userId._id === user._id &&
-                                                <button onClick={()=>{handleReviewDelete(product._id, ele._id, ele.userId._id)}}>Delete Your Review</button>
+                                                <button 
+                                                    className='btn btn-sm btn-outline-secondary mt-2'
+                                                    style={{marginLeft:'15px'}}
+                                                    onClick={()=>{handleReviewDelete(product._id, ele._id, ele.userId._id)}}>
+                                                        <RiDeleteBin6Line style={{fontSize:'25px'}}/>
+                                                </button>
                                             }
 
                                             <br/>
@@ -309,11 +350,15 @@ const ProductView = (props)=>
                                 })
                             }
                         </ul>
-                    </>
+                    </div>
                 }
-            </>
+            </div>
             <br/>
-            <Link to='/'>Back to Home-Page.</Link>
+            <div className='link mt-3 mb-5 text-start'>
+                <Link to='/' className="btn btn-outline-dark btn-lg">
+                    <BsArrowLeftShort style={{fontSize:'35px'}}/><b>Home-Page</b>
+                </Link>
+            </div>
         </div>
     );
 };

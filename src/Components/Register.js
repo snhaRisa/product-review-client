@@ -1,8 +1,9 @@
 
 import { useState } from 'react'; 
 import validator from 'validator';
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'; 
+import { useHistory, Link } from 'react-router-dom/cjs/react-router-dom.min'; 
 import { useDispatch } from 'react-redux';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { startRegisterUser } from '../Actions/userActions';
 
@@ -94,17 +95,53 @@ const Register = (props)=>
     };
 
     return (
-        <div>
-            <h1>Register with Us !</h1><br/>
+        <div className='container mt-5 text-center'>
+            <h1 className='display-2'>Register with Us !</h1><br/>
             <form onSubmit={handleSubmit}>
-                <input type='text' name='username' value={username} onChange={handleChange} placeholder='Enter your Username...'/>
-                {errors.username && <span>{errors.username}</span>}
-                <input type='text' name='email' value={email} onChange={handleChange} placeholder='Enter your E-Mail...'/>
-                {errors.email && <span>{errors.email}</span>}
-                <input type='password' name='password' value={password} onChange={handleChange} placeholder='Enter your password...'/>
-                {errors.password && <span>{errors.password}</span>}
-                <input type='submit' value='Register !'/>
+                <div className='mt-3 form-group col-md-6 mx-auto'>
+                    <input 
+                        className='form-control form-control-lg' 
+                        type='text' 
+                        name='username' 
+                        value={username} 
+                        onChange={handleChange} 
+                        placeholder='Enter your Username...'
+                    />
+                    {errors.username && <div className='mt-2 alert alert-danger'><span>{errors.username}</span></div>}
+                </div>
+                <div className='mt-3 col-md-6 mx-auto form-group'>
+                    <input 
+                        className='form-control form-control-lg' 
+                        type='text' 
+                        name='email' 
+                        value={email} 
+                        onChange={handleChange} 
+                        placeholder='Enter your E-Mail...'
+                    />
+                    {errors.email && <div className='mt-2 alert alert-danger'><span>{errors.email}</span></div>}
+                </div>
+                <div className='mt-3 col-md-6 mx-auto form-group'>
+                    <input 
+                        className='form-control form-control-lg' 
+                        type='password' 
+                        name='password' 
+                        value={password} 
+                        onChange={handleChange} 
+                        placeholder='Enter your password...'
+                    />
+                    {errors.password && <div className='mt-2 alert alert-danger alert-dismissible fade show'><span>{errors.password}</span></div>}
+                </div>
+                <div className='mt-5'>
+                    <input 
+                        className='btn btn-outline-success btn-lg' 
+                        type='submit' 
+                        value='Register !'
+                    />
+                </div>
             </form>
+            <div className='mt-3 alert alert-link'>
+                <Link to='/login'>Already signed up. Login Here !</Link>
+            </div>
         </div>
     )
 }; 
